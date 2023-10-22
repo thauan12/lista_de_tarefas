@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lista_de_tarefas/view/pages/task_completadas.dart';
 import 'package:lista_de_tarefas/view/pages/tarefasincompletasPage.dart';
 import '../model/task.dart' as MyTask;
+import '../view/pages/tarefascompletasPage.dart';
 
 final List<MyTask.Task> tasks = [];
 

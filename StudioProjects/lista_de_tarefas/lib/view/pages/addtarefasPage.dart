@@ -20,24 +20,52 @@ class _AddTarefaPageState extends State<AddTarefaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Adicionar Tarefa'),
+        backgroundColor: const Color.fromRGBO(240, 230, 140, 0.4),
       ),
-      body: Padding(
+      body: Container(
+        color: const Color.fromRGBO(240, 230, 140, 0.4),
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start, // Define o alinhamento à esquerda
           children: [
+            Text(
+              'Tarefa *',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+
+              ),
+            ),
             TextField(
               controller: nomeController,
-              decoration: InputDecoration(labelText: 'Nome da Tarefa'),
+              decoration: InputDecoration(
+                hintText: 'Digite o nome da tarefa',
+              ),
             ),
+            SizedBox(height: 30),
+            Text(
+              'Descrição *',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 15),
             TextField(
               controller: descricaoController,
-              decoration: InputDecoration(labelText: 'Descrição'),
+              maxLines: 5,
+              decoration: InputDecoration(
+                hintText: 'Descrição da tarefa',
+                contentPadding: EdgeInsets.all(16.0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
             ),
+            SizedBox(height: 15), // Adicione um espaço entre os campos
             ListTile(
               title: Text(
-                'Data de Vencimento: ${dataVencimento != null ? dataVencimento.toString().split(' ')[0] : "Selecione a data"}',
+                'Prazo: ${dataVencimento != null ? dataVencimento.toString().split(' ')[0] : "Selecione a data"}',
               ),
               trailing: IconButton(
                 icon: Icon(Icons.calendar_today),
@@ -57,21 +85,36 @@ class _AddTarefaPageState extends State<AddTarefaPage> {
                 },
               ),
             ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Adicione a lógica para criar a nova tarefa aqui
-                final taskController = TaskController();
-                taskController.addTask(
-                  widget.tasks,
-                  nomeController.text,
-                  descricaoController.text,
-                  dataVencimento ?? DateTime.now(),
-                );
-                // Após adicionar a tarefa, você pode retornar à tela anterior
-                Navigator.of(context).pop();
-              },
-              child: Text('Adicionar Tarefa'),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (nomeController.text.isNotEmpty &&
+                        descricaoController.text.isNotEmpty) {
+                      final taskController = TaskController();
+                      taskController.addTask(
+                        widget.tasks,
+                        nomeController.text,
+                        descricaoController.text,
+                        dataVencimento ?? DateTime.now(),
+                      );
+                      Navigator.of(context).pop();
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Por favor, preencha todos os campos obrigatórios.'),
+                        ),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(200, 50),
+                    textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+                  child: Text('Adicionar Tarefa'),
+                ),
+              ),
             ),
           ],
         ),

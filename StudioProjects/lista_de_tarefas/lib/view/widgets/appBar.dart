@@ -14,7 +14,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color(0xFF006060),
+      backgroundColor: Colors.blueGrey,
       title: const Text(
         'Minhas Tarefas',
         style: TextStyle(
@@ -23,8 +23,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
           color: Colors.white,
         ),
       ),
-      centerTitle: true,
-      actions: [
+      centerTitle: true
+      /*actions: [
         IconButton(
           icon: const Icon(
             Icons.logout,
@@ -34,7 +34,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             //Autenticacao().logout(context);
           },
         ),
-      ],
+      ],*/
     );
   }
 }

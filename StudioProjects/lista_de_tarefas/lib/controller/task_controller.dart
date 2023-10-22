@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lista_de_tarefas/model/task.dart' as MyTask;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TaskController {
-  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   Future<void> addTask(
       List<MyTask.Task> tasks,
@@ -19,31 +18,32 @@ class TaskController {
         dataVencimento: dataVencimento,
       );
 
+      print('Novo Task: $newTask');
+
+      final taskCollection = FirebaseFirestore.instance.collection('tasks');
+
+      await taskCollection.add(newTask.toJson());
+
       tasks.add(newTask);
     } catch (error) {
       print('Erro ao adicionar tarefa: $error');
     }
   }
 
-  void editTask(
-      MyTask.Task task,
-      String nome,
-      String descricao,
-      DateTime dataVencimento,
-      ) {
+  Future<void> editTask(MyTask.Task updatedTask) async {
     try {
-      task.nome = nome;
-      task.descricao = descricao;
-      task.dataVencimento = dataVencimento;
+      final taskReference = FirebaseFirestore.instance.collection('tasks').doc(updatedTask.id);
+      await taskReference.update(updatedTask.toJson()); // Atualiza a tarefa no Firebase Firestore
     } catch (error) {
       print('Erro ao editar tarefa: $error');
     }
   }
 
-  void deleteTask(List<MyTask.Task> tasks, MyTask.Task task) { // Use o prefixo MyTask para a classe Task
+  Future<void> deleteTask(MyTask.Task task) async {
     try {
-      // Remova a tarefa da lista
-      tasks.remove(task);
+      final taskReference = FirebaseFirestore.instance.collection('tasks').doc(task.id);
+
+      await taskReference.delete(); // Exclui a tarefa no Firebase Firestore
     } catch (error) {
       print('Erro ao excluir tarefa: $error');
     }
